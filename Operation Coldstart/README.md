@@ -50,4 +50,4 @@ Upon testing an SSRF payload we are met with this message:
 
 <img width="1282" height="626" alt="image" src="https://github.com/user-attachments/assets/2fdd6481-ac5a-4306-a870-b56292b619af" />
 
-
+We can try a couple methods to bypass this

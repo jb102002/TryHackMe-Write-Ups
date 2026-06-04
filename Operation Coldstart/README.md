@@ -26,7 +26,7 @@ I also tested for common file extensions e.g. .env, .txt, .py but it did not yie
 
 Interesting... The website acts as a URL Previews service that fetches external URLs and displays previews of the contents in your browser. The "© Volt Labs · do not expose externally" footer in the page confirms that this page should not be public. It is anyways.
 
-This functionality is a classic Server Side Request Forgery Target (SSRF). If we can borrow the server's network position to possibly gain access to the contents of restricted directories within the application.
+This functionality is a classic Server Side Request Forgery Target (SSRF). If so we can borrow the server's network position to reach internal services and resources that are otherwise inaccessible from outside the network.
 
 **Lets check our endpoints**
 
@@ -34,7 +34,7 @@ This functionality is a classic Server Side Request Forgery Target (SSRF). If we
 
 <img width="1276" height="620" alt="image" src="https://github.com/user-attachments/assets/ecac16b5-313d-401f-9f40-83d71772cd07" />
 
-This is as expected if we refer to the HTTP 308 status code in the dirbuster scan
+This endpoint redirects us to the /admin/ directory with a HTTP 403 Forbidden Status Code.
 
 **/preview**
 
@@ -50,4 +50,15 @@ Upon testing an SSRF payload we are met with this message:
 
 <img width="1282" height="626" alt="image" src="https://github.com/user-attachments/assets/2fdd6481-ac5a-4306-a870-b56292b619af" />
 
-We can try a couple methods to bypass this
+**We can try a couple IP Address obfuscation methods to bypass this:**
+?url=http://127.0.0.1
+?url=http://0.0.0.0
+?url=http://[::1]
+?url=http://2130706433   (decimal) 
+?url=http://0x7f000001   (hex)
+
+These seem to still be blocked by the allowlist
+
+
+
+

@@ -43,3 +43,11 @@ This is as expected if we refer to the HTTP 308 status code in the dirbuster sca
 This further confirms our suspicions of a possible SSRF entry point
 
 Notice the "staging" label in the top right-hand corner. This tells us that this is likely a dev/staging environment and could have fewer protections
+
+**Lets look into this more in depth**
+
+Upon testing an SSRF payload we are met with this message:
+
+<img width="1282" height="626" alt="image" src="https://github.com/user-attachments/assets/2fdd6481-ac5a-4306-a870-b56292b619af" />
+
+

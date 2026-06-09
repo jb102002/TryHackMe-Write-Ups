@@ -26,7 +26,7 @@ I also tested for common file extensions e.g. .env, .txt, .py but it did not yie
 
 Interesting... The website acts as a URL Previews service that fetches external URLs and displays previews of the contents in your browser. The "© Volt Labs · do not expose externally" footer in the page confirms that this page should not be public. It is anyways.
 
-This functionality is a classic Server Side Request Forgery Target (SSRF). If so we can borrow the server's network position to reach internal services and resources that are otherwise inaccessible from outside the network.
+This functionality is a classic Server Side Request Forgery (SSRF) target. If so, we can possibly borrow the server's network position to reach internal services.
 
 **Lets check our endpoints**
 
@@ -44,21 +44,23 @@ This further confirms our suspicions of a possible SSRF entry point
 
 Notice the "staging" label in the top right-hand corner. This tells us that this is likely a dev/staging environment and could have fewer protections
 
-**Lets look into this more in depth**
+**Lets look into this endpoint in more depth**
 
 Upon testing an SSRF payload we are met with this message:
 
 <img width="1282" height="626" alt="image" src="https://github.com/user-attachments/assets/2fdd6481-ac5a-4306-a870-b56292b619af" />
 
-**We can try a couple IP Address obfuscation methods to bypass this:**
+I tried a couple more obfuscation methods for the query parameter:
 ?url=http://127.0.0.1
 ?url=http://0.0.0.0
 ?url=http://[::1]
 ?url=http://2130706433   (decimal) 
 ?url=http://0x7f000001   (hex)
 
-These seem to still be blocked by the allowlist
+There seems to be a server-side allow list that is blocking our attempts to gain network positioning.
 
+I also pulled up Burp Suite and checked if there were any header injection vulnerabilites that we could take advantage of including a Host header but this did not prove to be worth while.
 
-
+Not Found
+The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
 

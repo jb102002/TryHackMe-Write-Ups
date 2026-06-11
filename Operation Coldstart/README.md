@@ -61,6 +61,46 @@ There seems to be a server-side allow list that is blocking our attempts to gain
 
 I also pulled up Burp Suite and checked if there were any header injection vulnerabilites that we could take advantage of including a Host header but this did not prove to be worth while.
 
-Not Found
-The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+**The allowlist on the website seem to be pretty strict. After a little while of testing I moved to the FTP service to see if we had any luck there**
+
+<img width="1916" height="957" alt="image" src="https://github.com/user-attachments/assets/6fdd169f-1a56-4225-8675-ea74024ff7c3" />
+
+Anonymous FTP login was enabled on the server
+
+<img width="809" height="559" alt="image" src="https://github.com/user-attachments/assets/b3967466-6fc0-49d4-a1b7-2006f8840afe" />
+
+I have found a file named "backup.tar.gz". I will download the file to see what it contains
+
+**After unpacking the tar.gz file it appears we have a new directory named "/voltlabs-preview"**
+
+Inside this directory we have a README.md, app.py, and requirements.txt file.
+
+Lets look at the README.md file
+
+**README.md**
+
+<img width="656" height="125" alt="image" src="https://github.com/user-attachments/assets/4a956637-63fa-4856-a65b-f7953531ff9b" />
+
+**requirements.txt**
+
+<img width="620" height="81" alt="image" src="https://github.com/user-attachments/assets/00ce4615-8831-40ce-8970-cfa96a1486bd" />
+
+**app.py**
+
+<img width="956" height="657" alt="image" src="https://github.com/user-attachments/assets/f21aefea-ed17-4f2f-a40c-ba7bbfb83e42" />
+
+We seem to have finally found the allow list for the URL preview service which is "kestrel.thm". Better yet, this domain resolves to local host on the server side. We may finally be able to access the /admin/ directory.
+
+**Testing the admin endpoint with the new domain**
+
+<img width="1122" height="888" alt="image" src="https://github.com/user-attachments/assets/a18e90f3-9781-4d5b-b8cd-0c565327a0f3" />
+
+It appears we officially have detected an SSRF vulnerability using this URL preview input.
+
+I tried to manually bruteforce some further endpoints from the /admin/ directory but was not able to find anything
+
+**Running a BurpSuite intruder sniper attack**
+
+<img width="1023" height="833" alt="image" src="https://github.com/user-attachments/assets/3350ee49-418d-47f9-837f-9836ba84791e" />
+
 

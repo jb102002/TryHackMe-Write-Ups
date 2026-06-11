@@ -97,10 +97,18 @@ We seem to have finally found the allow list for the URL preview service which i
 
 It appears we officially have detected an SSRF vulnerability using this URL preview input.
 
-I tried to manually bruteforce some further endpoints from the /admin/ directory but was not able to find anything
+Upon looking further into the python script, we find something interesting:
 
-**Running a BurpSuite intruder sniper attack**
+<img width="953" height="657" alt="image" src="https://github.com/user-attachments/assets/5c09e5a2-ae6b-4bd5-b92d-4a4d5e538b76" />
 
-<img width="1023" height="833" alt="image" src="https://github.com/user-attachments/assets/3350ee49-418d-47f9-837f-9836ba84791e" />
+We find that the endpoint /admin/notes exits.
+
+**Testing /admin/notes**
+
+<img width="1116" height="885" alt="image" src="https://github.com/user-attachments/assets/f323bbd0-fa3a-4d9a-ade3-d7e8a5527b47" />
+
+We now have the web developer's SSH credentials
+
+
 
 

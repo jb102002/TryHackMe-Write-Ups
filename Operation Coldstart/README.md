@@ -109,6 +109,12 @@ We find that the endpoint /admin/notes exits.
 
 We now have the web developer's SSH credentials
 
+After SSH'ing into the target machine we are able to locate the user.txt file which is flag one
+
+<img width="813" height="564" alt="image" src="https://github.com/user-attachments/assets/5f2348d6-f481-44dd-811b-9fc1d6a62b56" />
+
+After running "find / -name "flag.txt" 2>/dev/null", I concluded that the second flag does not exist on the SSH server
+
 
 
 

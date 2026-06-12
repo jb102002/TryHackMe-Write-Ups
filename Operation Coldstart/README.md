@@ -175,7 +175,6 @@ The SUID bash binary was then executed with the -p flag to preserve root privile
 With a root shell obtained, the final flag was retrieved.
 
 
-<img width="974" height="647" alt="image" src="https://github.com/user-attachments/assets/0b744286-0439-4e7b-ab01-ab0ba0f9aed8" />
 
 <img width="705" height="150" alt="image" src="https://github.com/user-attachments/assets/356c7579-3848-47cb-b24a-37006cb1ec77" />
 

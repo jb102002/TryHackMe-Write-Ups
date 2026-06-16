@@ -1,6 +1,6 @@
 # UnIndexed — Write-Up
 
-## Prompt
+## Scenario
 
 Your Mission
 You are a security consultant hired to audit Cloudwright Labs' internal AI assistant, codenamed Atlas. The company claims that Atlas serves only public employee information: onboarding guides, expense policies, and on-call schedules.

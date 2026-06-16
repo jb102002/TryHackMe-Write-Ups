@@ -114,13 +114,15 @@ if p == "notes":
 
 ---
 
-### SSRF Confirmed — Accessing /admin/notes
+### SSRF Confirmed - Accessing /admin/notes
 
 <img width="1122" height="888" alt="image" src="https://github.com/user-attachments/assets/a18e90f3-9781-4d5b-b8cd-0c565327a0f3" />
 
 Passing kestrel.thm through the ?url= parameter successfully bypassed the allowlist, confirming the SSRF vulnerability. Navigating to **/admin/notes** via the same vector returned the web developer's SSH credentials.
 
 <img width="1116" height="885" alt="image" src="https://github.com/user-attachments/assets/f323bbd0-fa3a-4d9a-ade3-d7e8a5527b47" />
+
+**Finding:** SSRF confirmed. The allowlist was bypassable using a hostname that resolved internally to localhost, granting access to the protected /admin route and exposing credentials stored in a plaintext notes file.
 
 ---
 
@@ -174,9 +176,14 @@ The SUID bash binary was then executed with the -p flag to preserve root privile
 
 With a root shell obtained, the final flag was retrieved.
 
-
+**Finding:** The tar wildcard injection succeeded because the cron job ran as root over a world-writable directory with no input sanitisation. Write access to the backup directory was all that was needed to escalate to full root.
 
 <img width="705" height="150" alt="image" src="https://github.com/user-attachments/assets/356c7579-3848-47cb-b24a-37006cb1ec77" />
 
+---
 
+### Summary
 
+Operation Coldstart illustrates how a chain of individually low-severity misconfigurations can combine into full system compromise. No single vulnerability was catastrophic on its own (anonymous FTP, an internal hostname in a backup archive, plaintext credentials in an admin note, and an unsanitised cron job). Each finding enabled the next.
+
+The SSRF vulnerability could not have been exploited without the source code from the FTP server. The credentials could not have been retrieved without the SSRF. Root access could not have been obtained without the tar wildcard exploit. The attack path was entirely dependent on the backup archive being publicly accessible, making that the most critical finding to remediate.

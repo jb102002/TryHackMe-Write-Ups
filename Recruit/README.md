@@ -27,7 +27,7 @@ Considering this is a CTF challenge, there is not much research to perform in th
 
 <img width="1919" height="848" alt="apidetails" src="https://github.com/user-attachments/assets/fe478b0b-a6b4-43a2-9954-39be2ab23206" />
 
-Walking the application revealed information about the API that should not be publicly accessible:
+**Walking the application revealed information about the API that should not be publicly accessible:**
 
 > - Backend is running PHP
 > - **/file.php?cv=<URL>** endpoint with a query string (possibly vulnerable to SSRF)
@@ -36,18 +36,18 @@ Walking the application revealed information about the API that should not be pu
 
 <img width="1030" height="720" alt="gobuster" src="https://github.com/user-attachments/assets/392c51c1-3801-4cc1-bdb8-d5b20e3a6299" />
 
-Ran Gobuster after initial recon with -x flag to enumerate directories and any PHP endpoints
+**Ran Gobuster after initial recon with -x flag to enumerate directories and any PHP endpoints**
 
 <img width="979" height="864" alt="maillog" src="https://github.com/user-attachments/assets/0e95ab28-d1ca-4c13-9041-a96a79f1594c" />
 
-Mail.log was found after initial enumeration that revealed sensitive info regarding user accounts including:
+**Mail.log was found after initial enumeration that revealed sensitive info regarding user accounts including:**
 
 > - Organization emails
 >   - hr@recruit.thm
 >   - it-support@recruit.thm
 > - Logged email including HR login credentials' configuration file (config.php)
 
-**Note** Admin credentials are not stored in the application. They are stored within the backend database.
+**Note:** Admin credentials are not stored in the application. They are stored within the backend database.
 
 <img width="648" height="820" alt="assets" src="https://github.com/user-attachments/assets/7b399695-c707-42c8-9a91-55b37c94608e" />
 

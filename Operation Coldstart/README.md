@@ -6,7 +6,7 @@ Volt Labs, a small SaaS company, suspects an old staging server has become an ex
 
 ---
 
-### Reconnaissance
+### Recon
 
 To begin, a basic nmap scan was run against the target to identify open ports and detect any vulnerable service versions.
 
@@ -20,7 +20,7 @@ The scan revealed three open ports:
 
 ---
 
-### Web Enumeration
+### Enumeration
 
 With HTTP confirmed, a directory brute force scan was run using Gobuster to enumerate available endpoints.
 

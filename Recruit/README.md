@@ -45,7 +45,7 @@ Considering this is a CTF challenge, there is not much research to perform in th
 > - Organization emails
 >   - hr@recruit.thm
 >   - it-support@recruit.thm
-> - Logged email including HR login credentials' configuration file (config.php)
+> - Logged email including HR login credentials' configuration file (config.php) and the HR username
 
 **Note:** Admin credentials are not stored in the application. They are stored within the backend database.
 

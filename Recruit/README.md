@@ -49,10 +49,19 @@ Considering this is a CTF challenge, there is not much research to perform in th
 
 **Note:** Admin credentials are not stored in the application. They are stored within the backend database.
 
+Directly accessing the config.php file 
+
 <img width="648" height="820" alt="assets" src="https://github.com/user-attachments/assets/7b399695-c707-42c8-9a91-55b37c94608e" />
 
 The /assets endpoint serves a directory listing rather than an index file. This endpoint did not have information to further enumeration however it was worth noting.
 
 ### Testing the Application
+
+**Testing the /file.php?cv=<URL> endpoint with **
+
+
+<img width="730" height="848" alt="config" src="https://github.com/user-attachments/assets/84debef4-c404-468a-89c5-047a58a849b0" />
+
+We have confirmed SSRF and obtained the temporary HR password for production
 
 

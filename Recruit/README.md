@@ -19,6 +19,8 @@ Server fingerprinting the following information:
 
 Considering this is a CTF challenge, there is not much research to perform in this stage.
 
+---
+
 ### Enumeration
 
 <img width="1917" height="965" alt="homepage" src="https://github.com/user-attachments/assets/c02d21be-d55a-48cb-98dd-46511539a1d3" />

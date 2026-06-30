@@ -64,4 +64,5 @@ The /assets endpoint serves a directory listing rather than an index file. This 
 
 We have confirmed LFI (Local File Inclusion) and obtained the temporary HR password for production
 
+**Using the HR username we obtained from the email log and the newly obtained password, we have gained access through the login portal, logged in as a normal user, and obtained the first flag**
 

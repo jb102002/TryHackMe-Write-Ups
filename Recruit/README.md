@@ -30,7 +30,7 @@ Considering this is a CTF challenge, there is not much research to perform in th
 **Walking the application revealed information about the API that should not be publicly accessible:**
 
 > - Backend is running PHP
-> - **/file.php?cv=<URL>** endpoint with a query string (possibly vulnerable to SSRF)
+> - **/file.php?cv=<URL>** endpoint with a query string (possibly vulnerable to SSRF/LFI)
 > - API fetches CVs from external URLs using HTTP and HTTPS
 > - API uses a blacklist to block restricted locations rather than a whitelist
 
@@ -57,11 +57,11 @@ The /assets endpoint serves a directory listing rather than an index file. This 
 
 ### Testing the Application
 
-**Testing the /file.php?cv=<URL> endpoint with **
+**Testing the /file.php?cv=<URL> endpoint with file://config.php exposed source code for the file**
 
 
 <img width="730" height="848" alt="config" src="https://github.com/user-attachments/assets/84debef4-c404-468a-89c5-047a58a849b0" />
 
-We have confirmed SSRF and obtained the temporary HR password for production
+We have confirmed LFI (Local File Inclusion) and obtained the temporary HR password for production
 
 

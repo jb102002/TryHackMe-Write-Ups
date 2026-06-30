@@ -12,6 +12,8 @@ TryHackMe Profile: https://tryhackme.com/p/jhb0081
 
 <img width="700" height="362" alt="image" src="https://github.com/user-attachments/assets/9160c051-87ae-47a8-b5fa-9a7f32172244" />
 
+<img width="700" height="362" alt="image" src="https://github.com/user-attachments/assets/09dad649-7f81-46b8-bd0a-163064f5716d" />
+
 <img width="700" height="362" alt="image" src="https://github.com/user-attachments/assets/8a81dc92-b39a-4797-a0b5-2cc733220cdd" />
 
 <img width="700" height="362" alt="image" src="https://github.com/user-attachments/assets/d62abd6e-926e-4ac2-9d3d-d3a70b801c66" />
@@ -19,9 +21,6 @@ TryHackMe Profile: https://tryhackme.com/p/jhb0081
 <img width="700" height="362" alt="image" src="https://github.com/user-attachments/assets/46d8b0ac-c7c4-4c36-9cce-27652441c948" />
 
 <img width="700" height="362" alt="image" src="https://github.com/user-attachments/assets/5058ce0c-d950-4cd4-9905-4d75ad10bc4b" />
-
-<img width="700" height="362" alt="image" src="https://github.com/user-attachments/assets/09dad649-7f81-46b8-bd0a-163064f5716d" />
-
 
 <img width="700" height="362" alt="image" src="https://github.com/user-attachments/assets/2f31c3e3-bc5e-4247-8fca-8c2ccba18d85" />
 

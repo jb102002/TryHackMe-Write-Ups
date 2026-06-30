@@ -2,6 +2,8 @@
 
 TryHackMe Profile: https://tryhackme.com/p/jhb0081
 
+### Badges
+
 <img width="700" height="362" alt="image" src="https://github.com/user-attachments/assets/75befb89-5547-4646-8874-ab1197149902" />
 
 <img width="700" height="362" alt="image" src="https://github.com/user-attachments/assets/136871f4-945a-4e5e-b388-8f6008046338" />

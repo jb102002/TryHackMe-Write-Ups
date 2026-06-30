@@ -8,3 +8,13 @@ Can you gain an initial foothold, escalate your access, and ultimately log in as
 
 ### Recon
 
+<img width="1917" height="965" alt="image" src="https://github.com/user-attachments/assets/c02d21be-d55a-48cb-98dd-46511539a1d3" />
+
+<img width="1919" height="848" alt="image" src="https://github.com/user-attachments/assets/fe478b0b-a6b4-43a2-9954-39be2ab23206" />
+
+Manual enumeration of the web UI revealed information about the API that should not be publicly accessible:
+1. Backend is running PHP
+2. **/file.php?cv=<URL>** endpoint with a query string (possibly vulnerable to SSRF)
+3. API fetches CVs from external URLs using HTTP and HTTPS
+4. API uses a blacklist to block restricted locations rather than a whitelist
+

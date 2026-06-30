@@ -10,11 +10,22 @@ Can you gain an initial foothold, escalate your access, and ultimately log in as
 
 ### Recon
 
+<img width="578" height="189" alt="curlfingerprint-phpsessionid" src="https://github.com/user-attachments/assets/ade184b9-0e74-4aab-ad45-784e2c78cc4f" />
+
+Server fingerprinting the following information:
+
+> - Ubuntu server running Apache/2.4.41
+> - HttpOnly flag is not set (JavaScript running on the page via document.cookie can read that cookie's value)
+
+Considering this is a CTF challenge, there is not much research to perform in this stage.
+
+### Enumeration
+
 <img width="1917" height="965" alt="homepage" src="https://github.com/user-attachments/assets/c02d21be-d55a-48cb-98dd-46511539a1d3" />
 
 <img width="1919" height="848" alt="apidetails" src="https://github.com/user-attachments/assets/fe478b0b-a6b4-43a2-9954-39be2ab23206" />
 
-Manual enumeration of the web UI revealed information about the API that should not be publicly accessible:
+Walking the application revealed information about the API that should not be publicly accessible:
 
 > - Backend is running PHP
 > - **/file.php?cv=<URL>** endpoint with a query string (possibly vulnerable to SSRF)
@@ -25,9 +36,21 @@ Manual enumeration of the web UI revealed information about the API that should 
 
 Ran Gobuster after initial recon with -x flag to enumerate directories and any PHP endpoints
 
-<img width="578" height="189" alt="curlfingerprint-phpsessionid" src="https://github.com/user-attachments/assets/ade184b9-0e74-4aab-ad45-784e2c78cc4f" />
+<img width="979" height="864" alt="maillog" src="https://github.com/user-attachments/assets/0e95ab28-d1ca-4c13-9041-a96a79f1594c" />
 
-Server fingerprinting revealed more information:
+Mail.log was found after initial enumeration that revealed sensitive info regarding user accounts including:
 
-> - Ubuntu server running Apache/2.4.41
-> - HttpOnly flag is not set (JavaScript running on the page via document.cookie can read that cookie's value)
+> - Organization emails
+>   - hr@recruit.thm
+>   - it-support@recruit.thm
+> - Logged email including HR login credentials' configuration file (config.php)
+
+**Note** Admin credentials are not stored in the application. They are stored within the backend database.
+
+<img width="648" height="820" alt="assets" src="https://github.com/user-attachments/assets/7b399695-c707-42c8-9a91-55b37c94608e" />
+
+The /assets endpoint serves a directory listing rather than an index file. This endpoint did not have information to further enumeration however it was worth noting.
+
+### Testing the Application
+
+

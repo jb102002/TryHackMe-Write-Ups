@@ -6,6 +6,8 @@ Recruit has just launched its new recruitment portal, allowing HR staff to manag
 
 Can you gain an initial foothold, escalate your access, and ultimately log in as the administrator?
 
+---
+
 ### Recon
 
 <img width="1917" height="965" alt="image" src="https://github.com/user-attachments/assets/c02d21be-d55a-48cb-98dd-46511539a1d3" />

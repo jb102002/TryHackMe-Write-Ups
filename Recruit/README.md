@@ -68,4 +68,23 @@ We have confirmed LFI (Local File Inclusion) and obtained the temporary HR passw
 
 Upon logging in with the HR's credentials, we can see a candidate application status data table.
 
+Testing the input field with simple SQL payloads, it is apparent that the website has not restricted verbose error messages as shown below.
 
+<img width="1311" height="218" alt="image" src="https://github.com/user-attachments/assets/c3d1144e-65a7-4d7d-8e6b-88b3c145a884" />
+
+We can also see that the application is running MySQL.
+
+Using union based injection techniques we have enumerated a table name of "users" that may be of value and may give us admin credentials. 
+
+<img width="1308" height="427" alt="image" src="https://github.com/user-attachments/assets/efe94086-fa45-4d67-a035-c2528b602eec" />
+
+<img width="1302" height="154" alt="image" src="https://github.com/user-attachments/assets/203610ab-31c8-4477-b9b3-d42e624b7b74" />
+
+`
+test' UNION SELECT 1, 2, 3, group_concat(username, ':', password) FROM users  -- 
+`
+This was the payload used to exploit this candidate application status feature to obtain admin credentials
+
+<img width="1313" height="307" alt="image" src="https://github.com/user-attachments/assets/15424dff-f4a6-4d67-83a1-20223ebe1303" />
+
+We have obtained access to the admin dashboard and completed our pentest

